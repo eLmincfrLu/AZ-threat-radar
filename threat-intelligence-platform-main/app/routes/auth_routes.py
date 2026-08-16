@@ -40,7 +40,7 @@ def register():
             if user:
                 login_user(user)
                 flash(translate(locale, "register.success"), "success")
-                return redirect(url_for("dashboard.index"))
+                return redirect(url_for("auth.login"))
             flash(err, "danger")
     return render_template("register.html")
 
