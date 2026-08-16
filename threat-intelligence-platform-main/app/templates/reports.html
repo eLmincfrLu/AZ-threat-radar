@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ t('nav.reports') }} — {{ app_name }}{% endblock %}
+{% block page_heading %}{{ t('reports.heading') }}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{{ url_for('reports.export_csv') }}" class="btn btn-sm btn-primary"><i class="bi bi-download"></i>{{ t('reports.export_csv') }}</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="panel-card h-100">
+      <div class="panel-header">{{ t('reports.create_pdf') }}</div>
+      <p class="text-muted">{{ t('reports.create_pdf_hint')|safe }}</p>
+      <a href="{{ url_for('history.index') }}" class="btn btn-outline-light">{{ t('reports.search_history') }}</a>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel-card h-100">
+      <div class="panel-header">{{ t('reports.csv_title') }}</div>
+      <p class="text-muted">{{ t('reports.csv_hint') }}</p>
+      <a href="{{ url_for('reports.export_csv') }}" class="btn btn-primary">{{ t('reports.export_csv') }}</a>
+    </div>
+  </div>
+</div>
+
+<div class="panel-card">
+  <div class="panel-header">{{ t('reports.saved') }}</div>
+  <div class="table-responsive">
+    <table class="table table-dark table-hover tip-table mb-0">
+      <thead>
+        <tr>
+          <th>{{ t('common.title') }}</th>
+          <th>{{ t('common.target') }}</th>
+          <th>{{ t('common.saved_at') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in saved_reports %}
+        <tr>
+          <td>{{ report.title }}</td>
+          <td class="font-monospace">{{ report.analysis.target if report.analysis else '—' }}</td>
+          <td class="text-muted small">{{ report.created_at.strftime('%Y-%m-%d %H:%M') if report.created_at else '' }}</td>
+          <td>
+            {% if report.analysis %}
+            <a href="{{ url_for('analysis.result', analysis_id=report.analysis_id) }}" class="btn btn-sm btn-outline-light">{{ t('common.details') }}</a>
+            <a href="{{ url_for('reports.export_pdf', analysis_id=report.analysis_id) }}" class="btn btn-sm btn-primary">PDF</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">{{ t('reports.empty') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

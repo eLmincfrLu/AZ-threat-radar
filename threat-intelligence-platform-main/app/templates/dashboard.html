@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}{{ t('nav.dashboard') }} — {{ app_name }}{% endblock %}
+{% block page_heading %}{{ t('dashboard.heading') }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-label">{{ t('dashboard.total_analyses') }}</div>
+      <div class="stat-value">{{ stats.total }}</div>
+      <i class="bi bi-activity stat-icon"></i>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-safe">
+      <div class="stat-label">{{ t('dashboard.safe_analyses') }}</div>
+      <div class="stat-value">{{ stats.safe }}</div>
+      <i class="bi bi-shield-check stat-icon"></i>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-warning">
+      <div class="stat-label">{{ t('dashboard.suspicious_analyses') }}</div>
+      <div class="stat-value">{{ stats.suspicious }}</div>
+      <i class="bi bi-exclamation-triangle stat-icon"></i>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-danger">
+      <div class="stat-label">{{ t('dashboard.malicious_analyses') }}</div>
+      <div class="stat-value">{{ stats.malicious }}</div>
+      <i class="bi bi-bug stat-icon"></i>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="panel-card h-100">
+      <div class="panel-header">{{ t('dashboard.risk_distribution') }}</div>
+      <canvas id="riskChart" height="220"
+        data-safe="{{ risk_distribution.safe }}"
+        data-suspicious="{{ risk_distribution.suspicious }}"
+        data-malicious="{{ risk_distribution.malicious }}"
+        data-label-safe="{{ t('status.safe') }}"
+        data-label-suspicious="{{ t('status.suspicious') }}"
+        data-label-malicious="{{ t('status.malicious') }}"
+        data-label-count="{{ t('dashboard.chart.count') }}"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel-card h-100">
+      <div class="panel-header">{{ t('dashboard.top_categories') }}</div>
+      <canvas id="categoryChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel-card h-100">
+      <div class="panel-header">{{ t('dashboard.recent_alerts') }}</div>
+      <ul class="alert-list">
+        {% for alert in recent_alerts %}
+        <li>
+          <span class="badge badge-{{ alert.status|lower }}">{{ t('status.' + alert.status|lower) }}</span>
+          <span class="text-truncate">{{ alert.target }}</span>
+          <small class="text-muted">{{ alert.date }}</small>
+        </li>
+        {% else %}
+        <li class="text-muted">{{ t('dashboard.no_alerts') }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="panel-card">
+      <div class="panel-header d-flex justify-content-between align-items-center">
+        <span>{{ t('dashboard.recent_searches') }}</span>
+        <a href="{{ url_for('analysis.analyze_page') }}" class="btn btn-sm btn-primary">{{ t('dashboard.new_analysis') }}</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover tip-table mb-0">
+          <thead>
+            <tr>
+              <th>{{ t('common.target') }}</th>
+              <th>{{ t('common.type') }}</th>
+              <th>{{ t('common.risk') }}</th>
+              <th>{{ t('common.status') }}</th>
+              <th>{{ t('common.date') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in recent_searches %}
+            <tr>
+              <td class="font-monospace">{{ row.target }}</td>
+              <td><span class="badge badge-muted">{{ row.type|upper }}</span></td>
+              <td>
+                <div class="progress risk-bar" style="--pct: {{ row.risk_score }};">
+                  <span>{{ row.risk_score }}</span>
+                </div>
+              </td>
+              <td><span class="badge badge-{{ row.status|lower }}">{{ t('status.' + row.status|lower) }}</span></td>
+              <td class="text-muted small">{{ row.date }}</td>
+              <td><a href="{{ url_for('analysis.result', analysis_id=row.id) }}" class="btn btn-sm btn-outline-light">{{ t('common.details') }}</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-muted text-center py-4">{{ t('dashboard.empty') }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

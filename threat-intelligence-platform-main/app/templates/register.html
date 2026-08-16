@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "partials/password_input.html" import password_input %}
+{% block title %}{{ t('register.submit') }} — {{ app_name }}{% endblock %}
+
+{% block auth_content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+<header class="auth-topbar">
+  <div class="auth-topbar-brand">
+    <i class="bi bi-shield-lock-fill"></i>
+    <span>{{ app_name }}</span>
+  </div>
+  {% include "partials/language_switcher.html" %}
+</header>
+<div class="auth-page">
+  <div class="auth-grid"></div>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <i class="bi bi-person-plus-fill"></i>
+    </div>
+    <h1 class="auth-title">{{ t('register.heading') }}</h1>
+    <p class="auth-subtitle">{{ t('register.subtitle') }}</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} py-2">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="post" action="{{ url_for('auth.register') }}" id="registerForm" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="email">{{ t('login.email') }}</label>
+        <input type="email" class="form-control auth-input" id="email" name="email" placeholder="example@gmail.com" required autocomplete="username">
+      </div>
+      <div class="mb-3">
+        <div class="password-field-header">
+          <label class="form-label" for="password">{{ t('login.password') }}</label>
+          <button type="button" class="btn btn-sm btn-outline-secondary generate-password-btn" data-password-target="password" data-confirm-target="confirm_password">
+            <i class="bi bi-shuffle"></i> {{ t('common.generate_strong_password') }}
+          </button>
+        </div>
+        {{ password_input('password', 'password', 'auth-input', '••••••••', true, 'new-password') }}
+      </div>
+      <div class="mb-4">
+        <label class="form-label" for="confirm_password">{{ t('register.confirm_password') }}</label>
+        {{ password_input('confirm_password', 'confirm_password', 'auth-input', '••••••••', true, 'new-password') }}
+      </div>
+      <button type="submit" class="btn btn-primary w-100 auth-btn" id="registerBtn">
+        <span class="btn-label">{{ t('register.submit') }}</span>
+        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+      </button>
+    </form>
+    <p class="auth-switch mt-4 mb-0">
+      {{ t('register.have_account') }}
+      <a href="{{ url_for('auth.login') }}">{{ t('register.sign_in') }}</a>
+    </p>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

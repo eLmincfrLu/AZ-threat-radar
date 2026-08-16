@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ t('nav.history') }} — {{ app_name }}{% endblock %}
+{% block page_heading %}{{ t('history.heading') }}{% endblock %}
+
+{% block content %}
+<div class="panel-card mb-3">
+  <form class="row g-2 align-items-end" method="get" action="{{ url_for('history.index') }}" id="historyFilterForm">
+    <div class="col-md-3">
+      <label class="form-label">{{ t('common.search') }}</label>
+      <input type="search" name="q" class="form-control" value="{{ q }}" placeholder="{{ t('history.search_placeholder') }}">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">{{ t('common.type') }}</label>
+      <select name="type" class="form-select">
+        <option value="">{{ t('common.all_types') }}</option>
+        <option value="ip" {% if type_filter == 'ip' %}selected{% endif %}>IP</option>
+        <option value="domain" {% if type_filter == 'domain' %}selected{% endif %}>Domain</option>
+        <option value="url" {% if type_filter == 'url' %}selected{% endif %}>URL</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">{{ t('common.status') }}</label>
+      <select name="status" class="form-select">
+        <option value="">{{ t('common.all_statuses') }}</option>
+        <option value="SAFE" {% if status_filter == 'SAFE' %}selected{% endif %}>{{ t('status.safe') }}</option>
+        <option value="SUSPICIOUS" {% if status_filter == 'SUSPICIOUS' %}selected{% endif %}>{{ t('status.suspicious') }}</option>
+        <option value="MALICIOUS" {% if status_filter == 'MALICIOUS' %}selected{% endif %}>{{ t('status.malicious') }}</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-fill">{{ t('common.filter') }}</button>
+        <a href="{{ url_for('history.index') }}" class="btn btn-outline-light flex-fill">{{ t('common.clear') }}</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="panel-card">
+  <div class="table-responsive">
+    <table class="table table-dark table-hover tip-table mb-0" id="historyTable">
+      <thead>
+        <tr>
+          <th>{{ t('common.target') }}</th>
+          <th>{{ t('common.type') }}</th>
+          <th>{{ t('common.risk') }}</th>
+          <th>{{ t('common.status') }}</th>
+          <th>{{ t('common.date') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td class="font-monospace">{{ item.target }}</td>
+          <td>{{ item.type|upper }}</td>
+          <td>{{ item.risk_score }}</td>
+          <td><span class="badge badge-{{ item.status|lower }}">{{ t('status.' + item.status|lower) }}</span></td>
+          <td class="text-muted small">{{ item.date }}</td>
+          <td><a class="btn btn-sm btn-outline-light" href="{{ url_for('analysis.result', analysis_id=item.id) }}">{{ t('common.details') }}</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">{{ t('history.empty') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endblock %}

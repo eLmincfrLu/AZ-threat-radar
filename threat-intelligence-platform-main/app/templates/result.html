@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}{{ data.target }} — {{ app_name }}{% endblock %}
+{% block page_heading %}{{ t('result.heading') }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+
+{% block topbar_actions %}
+<form method="post" action="{{ url_for('reports.save_report', analysis_id=analysis.id) }}" class="d-inline">
+  <button type="submit" class="btn btn-sm btn-outline-light">{{ t('result.save_report') }}</button>
+</form>
+<a href="{{ url_for('reports.export_pdf', analysis_id=analysis.id) }}" class="btn btn-sm btn-primary">{{ t('result.download_pdf') }}</a>
+{% endblock %}
+
+{% block content %}
+{% set score = data.risk_score %}
+{% set risk_class = 'risk-safe' if score <= 30 else ('risk-suspicious' if score <= 70 else 'risk-malicious') %}
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('result.overview') }}</div>
+      <dl class="detail-list">
+        <dt>{{ t('common.target') }}</dt><dd class="font-monospace">{{ data.target }}</dd>
+        <dt>{{ t('common.type') }}</dt><dd>{{ data.type|upper }}</dd>
+        <dt>{{ t('result.analysis_date') }}</dt><dd>{{ data.analysis_date[:19]|replace('T', ' ') }} UTC</dd>
+      </dl>
+    </div>
+    <div class="panel-card mt-3">
+      <div class="panel-header">{{ t('result.recommendations') }}</div>
+      <p class="rec-banner {{ risk_class }} mb-0">{{ data.recommendation }}</p>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel-card text-center">
+      <div class="panel-header">{{ t('result.risk_score') }}</div>
+      <div class="risk-gauge {{ risk_class }}" data-score="{{ score }}">
+        <svg viewBox="0 0 120 120" class="gauge-svg">
+          <circle cx="60" cy="60" r="52" class="gauge-bg"></circle>
+          <circle cx="60" cy="60" r="52" class="gauge-fill" style="--score: {{ score }};"></circle>
+        </svg>
+        <div class="gauge-value">{{ score }}</div>
+      </div>
+      <span class="badge badge-{{ data.status|lower }} fs-6">{{ t('status.' + data.status|lower) }}</span>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('result.risk_details') }}</div>
+      <dl class="detail-list">
+        <dt>{{ t('common.status') }}</dt><dd><span class="badge badge-{{ data.status|lower }}">{{ t('status.' + data.status|lower) }}</span></dd>
+        <dt>{{ t('result.categories') }}</dt>
+        <dd>
+          {% for cat in data.threat_categories %}
+            <span class="badge badge-muted me-1">{{ cat }}</span>
+          {% endfor %}
+        </dd>
+        <dt>{{ t('result.country') }}</dt><dd>{{ data.country }}</dd>
+        <dt>{{ t('result.isp') }}</dt><dd>{{ data.isp }}</dd>
+        <dt>{{ t('result.asn') }}</dt><dd>{{ data.asn }}</dd>
+        <dt>{{ t('result.hostname') }}</dt><dd class="font-monospace">{{ data.hostname }}</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-md-6">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('result.whois') }}</div>
+      <dl class="detail-list">
+        <dt>{{ t('result.registrar') }}</dt><dd>{{ data.whois.registrar }}</dd>
+        <dt>{{ t('result.registration_date') }}</dt><dd>{{ data.whois.registration_date }}</dd>
+        <dt>{{ t('result.expiration_date') }}</dt><dd>{{ data.whois.expiration_date }}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('result.reputation') }}</div>
+      <dl class="detail-list">
+        <dt>{{ t('result.virustotal') }}</dt><dd>{{ data.reputation.virustotal_status }}</dd>
+        <dt>{{ t('result.blacklist') }}</dt><dd>{{ data.reputation.blacklist_status }}</dd>
+        <dt>{{ t('result.malware') }}</dt><dd>{{ data.reputation.malware_detection }}</dd>
+        <dt>{{ t('result.phishing') }}</dt><dd>{{ data.reputation.phishing_detection }}</dd>
+        <dt>{{ t('result.spam') }}</dt><dd>{{ data.reputation.spam_detection }}</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3">
+  <a href="{{ url_for('analysis.analyze_page') }}" class="btn btn-outline-light">{{ t('result.new_analysis') }}</a>
+  <a href="{{ url_for('history.index') }}" class="btn btn-link text-light">{{ t('result.view_history') }}</a>
+</div>
+{% endblock %}

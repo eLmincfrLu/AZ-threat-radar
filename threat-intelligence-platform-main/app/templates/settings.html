@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ t('nav.settings') }} — {{ app_name }}{% endblock %}
+{% block page_heading %}{{ t('settings.heading') }}{% endblock %}
+
+{% block topbar_actions %}
+{% include "partials/language_switcher.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('settings.user_info') }}</div>
+      <dl class="detail-list">
+        <dt>{{ t('settings.email') }}</dt><dd>{{ current_user.email }}</dd>
+        <dt>{{ t('settings.role') }}</dt><dd>{{ t('settings.role_student') }}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('settings.notifications') }}</div>
+      <div class="form-check form-switch mb-2">
+        <input class="form-check-input" type="checkbox" id="notifyMalicious" checked disabled>
+        <label class="form-check-label" for="notifyMalicious">{{ t('settings.notify_malicious') }}</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="notifyWeekly" checked disabled>
+        <label class="form-check-label" for="notifyWeekly">{{ t('settings.notify_weekly') }}</label>
+      </div>
+      <p class="text-muted small mt-2 mb-0">{{ t('settings.not_implemented') }}</p>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('settings.security') }}</div>
+      <a href="{{ url_for('dashboard.change_password_page') }}" class="btn btn-outline-light btn-sm">{{ t('settings.change_password') }}</a>
+      <button class="btn btn-outline-light btn-sm ms-2" disabled>{{ t('settings.enable_2fa') }}</button>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('settings.theme') }}</div>
+      <label class="form-label">{{ t('settings.appearance') }}</label>
+      <select class="form-select" id="themeSelect">
+        <option value="dark" selected>{{ t('settings.theme_dark') }}</option>
+        <option value="light">{{ t('settings.theme_light') }}</option>
+      </select>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('themeSelect')?.addEventListener('change', (e) => {
+  document.documentElement.dataset.theme = e.target.value;
+  localStorage.setItem('tip-theme', e.target.value);
+});
+const saved = localStorage.getItem('tip-theme');
+if (saved) document.documentElement.dataset.theme = saved;
+</script>
+{% endblock %}

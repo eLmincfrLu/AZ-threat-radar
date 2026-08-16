@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ t('analysis.heading') }} — {{ app_name }}{% endblock %}
+{% block page_heading %}{{ t('analysis.heading') }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+
+{% block topbar_actions %}
+<a href="{{ url_for('history.index') }}" class="btn btn-sm btn-outline-light">{{ t('analysis.history_link') }}</a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="panel-card analysis-card">
+      <p class="text-muted mb-4">{{ t('analysis.description') }}</p>
+      <form method="post" action="{{ url_for('analysis.analyze_page') }}" id="analysisForm">
+        <div class="type-selector mb-4" role="radiogroup" aria-label="Target type">
+          <label class="type-option">
+            <input type="radio" name="target_type" value="ip" checked>
+            <span><i class="bi bi-hdd-network"></i> {{ t('analysis.type_ip') }}</span>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="target_type" value="domain">
+            <span><i class="bi bi-globe2"></i> {{ t('analysis.type_domain') }}</span>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="target_type" value="url">
+            <span><i class="bi bi-link-45deg"></i> {{ t('analysis.type_url') }}</span>
+          </label>
+        </div>
+        <div class="mb-3">
+          <label for="target" class="form-label">{{ t('analysis.target_label') }}</label>
+          <input type="text" class="form-control form-control-lg analysis-input font-monospace" id="target" name="target"
+                 placeholder="8.8.8.8" required autocomplete="off">
+          <div class="form-text" id="targetHint">{{ t('analysis.target_hint') }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100" id="analyzeBtn">
+          <span class="btn-label"><i class="bi bi-radar"></i> {{ t('analysis.submit') }}</span>
+          <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+      </form>
+      <div class="examples mt-4">
+        <span class="text-muted small me-2">{{ t('analysis.quick_check') }}</span>
+        <button type="button" class="btn btn-sm btn-outline-success example-chip" data-type="domain" data-value="google.com">google.com</button>
+        <button type="button" class="btn btn-sm btn-outline-light example-chip" data-type="ip" data-value="8.8.8.8">8.8.8.8</button>
+        <button type="button" class="btn btn-sm btn-outline-danger example-chip" data-type="ip" data-value="185.199.108.153">185.199.108.153</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+{% endblock %}

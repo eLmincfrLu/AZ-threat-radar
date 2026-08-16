@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "partials/password_input.html" import password_input %}
+{% block title %}{{ t('login.submit') }} — {{ app_name }}{% endblock %}
+
+{% block auth_content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+<header class="auth-topbar">
+  <div class="auth-topbar-brand">
+    <i class="bi bi-shield-lock-fill"></i>
+    <span>{{ app_name }}</span>
+  </div>
+  {% include "partials/language_switcher.html" %}
+</header>
+<div class="auth-page">
+  <div class="auth-grid"></div>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <i class="bi bi-shield-lock-fill"></i>
+    </div>
+    <h1 class="auth-title">{{ app_name }}</h1>
+    <p class="auth-subtitle">{{ t('login.subtitle') }}</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} py-2">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="post" action="{{ url_for('auth.login') }}" id="loginForm" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="email">{{ t('login.email') }}</label>
+        <input type="email" class="form-control auth-input" id="email" name="email" placeholder="example@gmail.com" required autocomplete="username">
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="password">{{ t('login.password') }}</label>
+        {{ password_input('password', 'password', 'auth-input', '••••••••', true, 'current-password') }}
+      </div>
+      <div class="form-check mb-4">
+        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+        <label class="form-check-label" for="remember">{{ t('login.remember') }}</label>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 auth-btn" id="loginBtn">
+        <span class="btn-label">{{ t('login.submit') }}</span>
+        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+      </button>
+    </form>
+    <p class="auth-switch mt-4 mb-2">
+      {{ t('login.no_account') }}
+      <a href="{{ url_for('auth.register') }}">{{ t('login.sign_up') }}</a>
+    </p>
+    <p class="demo-hint mb-0">
+      {{ t('login.demo') }} <code>123@holbertonstudents.com</code> / <code>Holbie123!</code>
+    </p>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

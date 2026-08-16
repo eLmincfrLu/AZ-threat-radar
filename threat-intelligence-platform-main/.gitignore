@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+venv/
+env/
+app/database/database.db
+*.db-journal
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+_zip_extract/
