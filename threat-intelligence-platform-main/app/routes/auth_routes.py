@@ -38,7 +38,6 @@ def register():
             locale = resolve_locale()
             user, err = register_user(email, password, locale)
             if user:
-                login_user(user)
                 flash(translate(locale, "register.success"), "success")
                 return redirect(url_for("auth.login"))
             flash(err, "danger")
