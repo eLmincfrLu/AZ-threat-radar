@@ -5,6 +5,7 @@ from app.database.connection import db
 from app.models.search_history import SearchHistory
 from app.models.threat_analysis import ThreatAnalysis
 from app.services.threat_service import analyze_target
+from app.services.virustotal_service import VirusTotalError
 from app.i18n import resolve_locale, translate
 from app.utils.helpers import deserialize_payload, serialize_payload
 from app.utils.validators import validate_target
@@ -25,7 +26,11 @@ def analyze_page():
                 "danger",
             )
             return redirect(url_for("analysis.analyze_page"))
-        result = analyze_target(normalized, detected)
+        try:
+            result = analyze_target(normalized, detected)
+        except VirusTotalError as exc:
+            flash(translate(resolve_locale(), exc.code), "danger")
+            return redirect(url_for("analysis.analyze_page"))
         analysis = ThreatAnalysis(
             user_id=current_user.id,
             target=result["target"],
@@ -53,7 +58,11 @@ def result(analysis_id):
         abort(404)
     data = deserialize_payload(analysis.payload)
     if not data:
-        data = analyze_target(analysis.target, analysis.type)
+        try:
+            data = analyze_target(analysis.target, analysis.type)
+        except VirusTotalError as exc:
+            flash(translate(resolve_locale(), exc.code), "danger")
+            return redirect(url_for("analysis.analyze_page"))
     return render_template("result.html", analysis=analysis, data=data)
 
 
@@ -66,7 +75,13 @@ def api_analyze():
     ok, normalized, detected = validate_target(raw_target, target_type)
     if not ok:
         return {"error": translate(resolve_locale(), normalized, expected_type=target_type)}, 400
-    result = analyze_target(normalized, detected)
+    try:
+        result = analyze_target(normalized, detected)
+    except VirusTotalError as exc:
+        return {
+            "error": translate(resolve_locale(), exc.code),
+            "error_code": exc.code,
+        }, exc.status_code
     analysis = ThreatAnalysis(
         user_id=current_user.id,
         target=result["target"],

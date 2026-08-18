@@ -1,54 +1,10 @@
-import hashlib
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
-from app.services.reputation_service import mock_reputation
 from app.services.risk_engine import compute_risk
+from app.services.virustotal_service import fetch_threat_intel
 
 
-def _seed(value: str) -> int:
-    return int(hashlib.sha256(value.encode()).hexdigest(), 16)
-
-
-def _mock_whois(target: str, target_type: str) -> dict:
-    seed = _seed(target)
-    years = 2010 + (seed % 12)
-    reg = datetime(years, 1 + (seed % 11), 1 + (seed % 27), tzinfo=timezone.utc)
-    exp = reg + timedelta(days=365 * (3 + seed % 5))
-    registrars = ["MarkMonitor Inc.", "GoDaddy.com, LLC", "NameCheap, Inc.", "Cloudflare, Inc."]
-    return {
-        "registrar": registrars[seed % len(registrars)],
-        "registration_date": reg.strftime("%Y-%m-%d"),
-        "expiration_date": exp.strftime("%Y-%m-%d"),
-    }
-
-
-def _mock_network(target: str, target_type: str) -> dict:
-    seed = _seed(f"net:{target}")
-    countries = ["United States", "Germany", "Netherlands", "Singapore", "Russia", "Brazil"]
-    isps = ["Google LLC", "Cloudflare, Inc.", "Amazon Technologies Inc.", "OVH SAS", "Hetzner Online GmbH"]
-    if target.lower() in ("google.com", "8.8.8.8"):
-        return {
-            "country": "United States",
-            "isp": "Google LLC",
-            "asn": "AS15169",
-            "hostname": "dns.google" if target_type == "ip" else "google.com",
-        }
-    if "185.199" in target:
-        return {
-            "country": "United States",
-            "isp": "GitHub, Inc.",
-            "asn": "AS36459",
-            "hostname": "pages.github.io",
-        }
-    return {
-        "country": countries[seed % len(countries)],
-        "isp": isps[seed % len(isps)],
-        "asn": f"AS{10000 + (seed % 50000)}",
-        "hostname": target if target_type != "url" else target.split("/")[2],
-    }
-
-
-def _category_weights(target: str, reputation: dict) -> dict[str, int]:
+def _category_weights(reputation: dict) -> dict[str, int]:
     weights = {
         "Phishing": 0,
         "Malware Hosting": 0,
@@ -64,32 +20,27 @@ def _category_weights(target: str, reputation: dict) -> dict[str, int]:
         weights["Spam"] = 10
     if reputation["blacklist_status"] == "Listed":
         weights["Suspicious Network"] = 15
-    seed = _seed(target)
-    if (seed % 29) == 0:
-        weights["Botnet Activity"] = 20
-    if target.lower() == "google.com" or target in ("8.8.8.8", "1.1.1.1"):
-        return {k: 0 for k in weights}
-    if "185.199" in target:
-        weights["Phishing"] = 25
-        weights["Malware Hosting"] = 30
+
+    malicious = int(reputation.get("vt_malicious_count", 0))
+    suspicious = int(reputation.get("vt_suspicious_count", 0))
+    if malicious >= 10 or suspicious >= 5:
         weights["Botnet Activity"] = 20
     return weights
 
 
-def analyze_target(target: str, target_type: str) -> dict:
-    reputation = mock_reputation(target, target_type)
-    network = _mock_network(target, target_type)
-    whois = _mock_whois(target, target_type)
-    weights = _category_weights(target, reputation)
+def _base_score(reputation: dict) -> int:
+    malicious = int(reputation.get("vt_malicious_count", 0))
+    suspicious = int(reputation.get("vt_suspicious_count", 0))
+    return min(100, malicious * 8 + suspicious * 4)
 
-    seed = _seed(f"base:{target}")
-    base = 8 + (seed % 25)
-    if target.lower() == "google.com":
-        base = 12
-    if target in ("8.8.8.8", "1.1.1.1"):
-        base = 10
-    if "185.199" in target:
-        base = 55
+
+def analyze_target(target: str, target_type: str) -> dict:
+    intel = fetch_threat_intel(target, target_type)
+    reputation = intel["reputation"]
+    network = intel["network"]
+    whois = intel["whois"]
+    weights = _category_weights(reputation)
+    base = _base_score(reputation)
 
     risk = compute_risk(base, weights)
     threats = risk.categories if risk.categories else (["None"] if risk.status == "SAFE" else [])
