@@ -58,11 +58,8 @@ def result(analysis_id):
         abort(404)
     data = deserialize_payload(analysis.payload)
     if not data:
-        try:
-            data = analyze_target(analysis.target, analysis.type)
-        except VirusTotalError as exc:
-            flash(translate(resolve_locale(), exc.code), "danger")
-            return redirect(url_for("analysis.analyze_page"))
+        flash(translate(resolve_locale(), "analysis.result_unavailable"), "warning")
+        return redirect(url_for("history.index"))
     return render_template("result.html", analysis=analysis, data=data)
 
 

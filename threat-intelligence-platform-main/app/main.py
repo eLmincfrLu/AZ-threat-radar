@@ -15,7 +15,7 @@ from app.routes.report_routes import report_bp
 from app.i18n import LOCALE_LABELS, SUPPORTED_LOCALES, resolve_locale, translate
 from app.services.auth_service import ensure_demo_user
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 
 def create_app():

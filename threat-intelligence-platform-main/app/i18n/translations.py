@@ -155,6 +155,8 @@ TRANSLATIONS = {
         "analysis.missing_api_key": "VirusTotal API açarı tapılmadı. .env faylında VIRUSTOTAL_API_KEY təyin edin.",
         "analysis.not_found": "VirusTotal bazasında bu hədəf üçün məlumat tapılmadı.",
         "analysis.api_error": "VirusTotal API-dən məlumat alınarkən xəta baş verdi. Yenidən cəhd edin.",
+        "analysis.url_pending": "URL hələ VirusTotal-də analiz olunur. Bir neçə dəqiqə gözləyib yenidən cəhd edin.",
+        "analysis.result_unavailable": "Bu analizin saxlanılmış nəticəsi tapılmadı. Yeni analiz edin.",
     },
     "en": {
         "nav.dashboard": "Dashboard",
@@ -300,6 +302,8 @@ TRANSLATIONS = {
         "analysis.missing_api_key": "VirusTotal API key not found. Set VIRUSTOTAL_API_KEY in the .env file.",
         "analysis.not_found": "No data found for this target in VirusTotal.",
         "analysis.api_error": "An error occurred while fetching data from VirusTotal. Please try again.",
+        "analysis.url_pending": "The URL is still being analyzed by VirusTotal. Wait a few minutes and try again.",
+        "analysis.result_unavailable": "Saved result data for this analysis was not found. Run a new analysis.",
     },
     "ru": {
         "nav.dashboard": "Панель",
@@ -445,5 +449,7 @@ TRANSLATIONS = {
         "analysis.missing_api_key": "Ключ VirusTotal API не найден. Укажите VIRUSTOTAL_API_KEY в файле .env.",
         "analysis.not_found": "Данные для этой цели не найдены в VirusTotal.",
         "analysis.api_error": "Ошибка при получении данных из VirusTotal. Попробуйте снова.",
+        "analysis.url_pending": "URL ещё анализируется VirusTotal. Подождите несколько минут и попробуйте снова.",
+        "analysis.result_unavailable": "Сохранённые данные этого анализа не найдены. Выполните новый анализ.",
     },
 }
