@@ -58,18 +58,23 @@
 <dl class="detail-list">
 <dt>{{ t('common.status') }}</dt>
 <dd><span class="badge badge-{{ data.status|lower }}">{{ t('status.' + data.status|lower) }}</span></dd>
+
 <dt>{{ t('result.categories') }}</dt>
 <dd>
 {% for cat in data.threat_categories %}
 <span class="badge badge-muted me-1">{{ cat }}</span>
 {% endfor %}
 </dd>
+
 <dt>{{ t('result.country') }}</dt>
 <dd>{{ data.country }}</dd>
+
 <dt>{{ t('result.isp') }}</dt>
 <dd>{{ data.isp }}</dd>
+
 <dt>{{ t('result.asn') }}</dt>
 <dd>{{ data.asn }}</dd>
+
 <dt>{{ t('result.hostname') }}</dt>
 <dd class="font-monospace">{{ data.hostname }}</dd>
 </dl>
@@ -148,6 +153,7 @@
 #country-map path[data-code="{{ data.country|lower }}"]{filter:drop-shadow(0 0 6px #ef3340);animation:mapPulse 2.4s ease-in-out infinite}
 @keyframes mapPulse{0%,100%{filter:drop-shadow(0 0 4px #ef3340)}50%{filter:drop-shadow(0 0 10px #ef3340)}}
 </style>
+{% endif %}
 
 <script>
 document.addEventListener('DOMContentLoaded',function(){
@@ -160,16 +166,17 @@ zoomOnScroll:false,
 regionStyle:{
 initial:{fill:'transparent',stroke:'#3b5c7d',strokeWidth:.75},
 hover:{fill:'rgba(56,189,248,.12)',stroke:'#38bdf8',strokeWidth:1,cursor:'pointer'}
-},
-series:{
+}
+{% if data.country and data.country != 'Unknown' %}
+,series:{
 regions:[{
 values:{'{{ data.country }}':100},
 scale:['#ef3340','#ef3340'],
 normalizeFunction:'polynomial'
 }]
 }
+{% endif %}
 });
 });
 </script>
-{% endif %}
 {% endblock %}
