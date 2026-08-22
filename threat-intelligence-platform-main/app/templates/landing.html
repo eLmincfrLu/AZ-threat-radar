@@ -8,10 +8,8 @@
     <i class="bi bi-shield-lock-fill"></i>
     <span>{{ app_name }}</span>
   </div>
-  <div class="landing-nav-actions">
+    <div class="landing-nav-actions">
     {% include "partials/language_switcher.html" %}
-    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-sm">{{ t('landing.cta_login') }}</a>
-    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">{{ t('landing.cta_start') }}</a>
   </div>
 </header>
 
@@ -22,8 +20,8 @@
     <h1 class="landing-title">{{ t('landing.hero_title') }}</h1>
     <p class="landing-subtitle">{{ t('landing.hero_subtitle') }}</p>
     <div class="landing-cta-group">
-      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">{{ t('landing.cta_start') }} <i class="bi bi-arrow-right"></i></a>
-      <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">{{ t('landing.cta_login') }}</a>
+      <a href="{{ url_for('auth.register') }}" class="btn-landing btn-landing-primary">{{ t('landing.cta_start') }} <i class="bi bi-arrow-right"></i></a>
+      <a href="{{ url_for('auth.login') }}" class="btn-landing btn-landing-outline">{{ t('landing.cta_login') }}</a>
     </div>
   </div>
 </section>

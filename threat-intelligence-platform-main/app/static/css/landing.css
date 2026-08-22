@@ -1,134 +1,166 @@
 .landing-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1050;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1050;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 0.85rem 1.5rem;
-  background: rgba(17, 24, 39, 0.92);
+  background: rgba(17, 24, 39, 0.7);
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  animation: fadeInDown 0.6s ease both;
 }
-.landing-nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  color: var(--text);
-}
+.landing-nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--text); }
 .landing-nav-brand i { color: var(--primary); }
-.landing-nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+.landing-nav-actions { display: flex; align-items: center; gap: 0.75rem; }
 
 .landing-hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
   padding: 7rem 1.5rem 4rem;
-  background: var(--bg);
-  overflow: hidden;
-  text-align: center;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(37,99,235,0.18), transparent 70%),
+    var(--bg);
+  overflow: hidden; text-align: center;
 }
 .landing-hero-grid {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: -10%;
   background-image:
-    linear-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(37, 99, 235, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(37, 99, 235, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.10) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(circle at center, black, transparent 70%);
+  animation: gridDrift 18s linear infinite;
 }
-.landing-hero-content {
-  position: relative;
-  max-width: 720px;
+@keyframes gridDrift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(48px, 48px); }
 }
+
+.landing-hero-content { position: relative; max-width: 720px; }
+
 .landing-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(37, 99, 235, 0.12);
-  color: var(--primary);
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(37, 99, 235, 0.12); color: var(--primary);
   border: 1px solid rgba(37, 99, 235, 0.3);
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
+  padding: 0.35rem 0.85rem; border-radius: 999px;
+  font-size: 0.8rem; font-weight: 600; margin-bottom: 1.25rem;
+  opacity: 0; animation: fadeInUp 0.7s ease 0.05s forwards;
 }
+.landing-badge i { animation: pulseIcon 2s ease-in-out infinite; }
+
 .landing-title {
-  font-size: 2.75rem;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 1rem;
-  line-height: 1.15;
+  font-size: 2.9rem; font-weight: 800; color: var(--text);
+  margin-bottom: 1rem; line-height: 1.15;
+  background: linear-gradient(90deg, var(--text) 40%, var(--primary) 60%, var(--text) 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  animation: fadeInUp 0.7s ease 0.18s forwards, shine 6s linear infinite 1s;
 }
+
 .landing-subtitle {
-  font-size: 1.1rem;
-  color: var(--muted);
-  margin-bottom: 2rem;
+  font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem;
+  opacity: 0; animation: fadeInUp 0.7s ease 0.32s forwards;
 }
+
 .landing-cta-group {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeInUp 0.7s ease 0.46s forwards;
 }
+
+.btn-landing {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 1.75rem; border-radius: 10px;
+  font-weight: 600; font-size: 1rem; text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.btn-landing-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #1e40af);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+}
+.btn-landing-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.5);
+  color: #fff;
+}
+.btn-landing-primary i { transition: transform 0.25s ease; }
+.btn-landing-primary:hover i { transform: translateX(4px); }
+
+.btn-landing-outline {
+  color: var(--text);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+}
+.btn-landing-outline:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--text);
+}
+
+.btn-landing::before {
+  content: "";
+  position: absolute; top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+.btn-landing:hover::before { left: 130%; }
 
 .landing-features {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 1.5rem 5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+  max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 5rem;
 }
 .feature-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.75rem;
-  text-align: left;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 1.75rem; text-align: left;
+  opacity: 0; transform: translateY(24px);
+  animation: fadeInUp 0.6s ease forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.feature-card:nth-child(1) { animation-delay: 0.55s; }
+.feature-card:nth-child(2) { animation-delay: 0.65s; }
+.feature-card:nth-child(3) { animation-delay: 0.75s; }
+.feature-card:nth-child(4) { animation-delay: 0.85s; }
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
 }
 .feature-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
+  width: 46px; height: 46px; border-radius: 12px;
   background: linear-gradient(135deg, var(--primary), #1e40af);
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  display: grid; place-items: center; color: #fff; font-size: 1.3rem; margin-bottom: 1rem;
+  transition: transform 0.35s ease;
 }
-.feature-card h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 0.5rem;
-}
-.feature-card p {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 0;
-}
+.feature-card:hover .feature-icon { transform: scale(1.12) rotate(-6deg); }
+.feature-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+.feature-card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0; }
 
 .landing-footer {
-  text-align: center;
-  padding: 1.5rem;
-  color: var(--muted);
-  font-size: 0.85rem;
+  text-align: center; padding: 1.5rem; color: var(--muted); font-size: 0.85rem;
   border-top: 1px solid var(--border);
 }
 
-@media (max-width: 900px) {
-  .landing-features { grid-template-columns: repeat(2, 1fr); }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseIcon {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+@keyframes shine {
+  to { background-position: -200% center; }
+}
+
+@media (max-width: 900px) { .landing-features { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) {
   .landing-features { grid-template-columns: 1fr; }
   .landing-title { font-size: 2rem; }
