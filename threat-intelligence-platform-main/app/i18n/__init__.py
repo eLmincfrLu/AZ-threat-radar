@@ -5,7 +5,7 @@ DEFAULT_LOCALE = "az"
 
 LOCALE_LABELS = {
     "az": "Azərbaycan",
-    "en": "English (US)",
+    "en": "English",
     "ru": "Русский",
 }
 
