@@ -1,5 +1,74 @@
+{# Small CSS flags next to AZ / EN / RU — no inline SVG (avoids sanitizer/CSP issues) #}
+{% macro lang_flag(code) -%}
+<span class="lang-flag lang-flag-{{ code }}" aria-hidden="true"></span>
+{%- endmacro %}
+<style>
+.lang-switcher-btn,
+  .lang-switcher .dropdown-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .lang-switcher .dropdown-item {
+    width: 100%;
+  }
+.lang-flag {
+    width: 16px;
+    height: 11px;
+    display: inline-block;
+    flex-shrink: 0;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.35);
+    overflow: hidden;
+    position: relative;
+    vertical-align: -1px;
+  }
+  .lang-flag-az {
+    background: linear-gradient(to bottom, #00b5e2 0 33.34%, #ef3340 33.34% 66.66%, #509e2f 66.66% 100%);
+  }
+  .lang-flag-az::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 3px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    box-shadow: 1.4px 0 0 0 #fff;
+  }
+  .lang-flag-az::after {
+    content: "";
+    position: absolute;
+    left: 10.2px;
+    top: 3.2px;
+    width: 4.2px;
+    height: 4.2px;
+    background: #fff;
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+  .lang-flag-en {
+    background: repeating-linear-gradient(
+      to bottom,
+      #b22234 0 7.69%,
+      #fff 7.69% 15.38%
+    );
+  }
+  .lang-flag-en::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 45%;
+    height: 53.8%;
+    background: #3c3b6e;
+  }
+  .lang-flag-ru {
+    background: linear-gradient(to bottom, #fff 0 33.34%, #0039a6 33.34% 66.66%, #d52b1e 66.66% 100%);
+  }
+</style>
 <div class="dropdown lang-switcher">
   <button class="btn lang-switcher-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ lang_flag(current_locale) }}
     {{ locale_labels[current_locale] }}
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
@@ -7,6 +76,7 @@
     <li>
       <a class="dropdown-item {% if code == current_locale %}active{% endif %}"
          href="{{ url_for('auth.set_language', lang=code, next=request.url) }}">
+        {{ lang_flag(code) }}
         {{ locale_labels[code] }}
       </a>
     </li>
