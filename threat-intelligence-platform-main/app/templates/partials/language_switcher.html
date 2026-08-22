@@ -1,5 +1,56 @@
+{# Small flags next to AZ / EN / RU labels #}
+{% macro lang_flag(code) -%}
+{%- if code == 'az' -%}
+<svg class="lang-flag" viewBox="0 0 36 24" aria-hidden="true" focusable="false">
+  <rect width="36" height="8" fill="#00b5e2"/>
+  <rect y="8" width="36" height="8" fill="#ef3340"/>
+  <rect y="16" width="36" height="8" fill="#509e2f"/>
+  <circle cx="16.1" cy="12" r="3.55" fill="#fff"/>
+  <circle cx="17.35" cy="12" r="2.85" fill="#ef3340"/>
+  <polygon fill="#fff" points="22.4,9.7 22.95,11.45 24.8,12 22.95,12.55 22.4,14.3 21.85,12.55 20,12 21.85,11.45"/>
+</svg>
+{%- elif code == 'en' -%}
+<svg class="lang-flag" viewBox="0 0 36 24" aria-hidden="true" focusable="false">
+  <rect width="36" height="24" fill="#b22234"/>
+  <rect y="1.85" width="36" height="1.85" fill="#fff"/>
+  <rect y="5.54" width="36" height="1.85" fill="#fff"/>
+  <rect y="9.23" width="36" height="1.85" fill="#fff"/>
+  <rect y="12.92" width="36" height="1.85" fill="#fff"/>
+  <rect y="16.62" width="36" height="1.85" fill="#fff"/>
+  <rect y="20.31" width="36" height="1.85" fill="#fff"/>
+  <rect width="14.4" height="13.1" fill="#3c3b6e"/>
+</svg>
+{%- else -%}
+<svg class="lang-flag" viewBox="0 0 36 24" aria-hidden="true" focusable="false">
+  <rect width="36" height="8" fill="#fff"/>
+  <rect y="8" width="36" height="8" fill="#0039a6"/>
+  <rect y="16" width="36" height="8" fill="#d52b1e"/>
+</svg>
+{%- endif -%}
+{%- endmacro %}
+<style>
+  .lang-flag {
+    width: 16px;
+    height: 11px;
+    display: inline-block;
+    vertical-align: -1px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.35);
+    flex-shrink: 0;
+  }
+  .lang-switcher-btn,
+  .lang-switcher .dropdown-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .lang-switcher .dropdown-item {
+    width: 100%;
+  }
+</style>
 <div class="dropdown lang-switcher">
   <button class="btn lang-switcher-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ lang_flag(current_locale) }}
     {{ locale_labels[current_locale] }}
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
@@ -7,6 +58,7 @@
     <li>
       <a class="dropdown-item {% if code == current_locale %}active{% endif %}"
          href="{{ url_for('auth.set_language', lang=code, next=request.url) }}">
+        {{ lang_flag(code) }}
         {{ locale_labels[code] }}
       </a>
     </li>
