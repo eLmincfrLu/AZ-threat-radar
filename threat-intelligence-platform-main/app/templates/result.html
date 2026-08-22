@@ -3,6 +3,7 @@
 {% block page_heading %}{{ t('result.heading') }}{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/analysis.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css">
 {% endblock %}
 
 {% block topbar_actions %}
@@ -88,6 +89,48 @@
     </div>
   </div>
 </div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('result.threat_origin') }}</div>
+      {% if data.country and data.country != 'Unknown' %}
+      <div id="country-map" style="height: 320px;"></div>
+      {% else %}
+      <p class="text-muted mb-0">{{ t('result.origin_unknown') }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
+{% if data.country and data.country != 'Unknown' %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  new jsVectorMap({
+    selector: '#country-map',
+    map: 'world',
+    backgroundColor: 'transparent',
+    zoomButtons: false,
+    regionStyle: {
+      initial: { fill: '#1e293b', stroke: '#334155', strokeWidth: 0.5 },
+      hover: { fill: '#334155' }
+    },
+    series: {
+      regions: [{
+        values: { '{{ data.country }}': 100 },
+        scale: ['#ef3340', '#ef3340'],
+        normalizeFunction: 'polynomial',
+        legend: { show: false }
+      }]
+    }
+  });
+});
+</script>
+{% endif %}
+{% endblock %}
 
 <div class="mt-3">
   <a href="{{ url_for('analysis.analyze_page') }}" class="btn btn-outline-light">{{ t('result.new_analysis') }}</a>
