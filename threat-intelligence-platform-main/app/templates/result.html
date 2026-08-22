@@ -90,6 +90,19 @@
   </div>
 </div>
 
+<div class="row g-3 mt-1">
+  <div class="col-12">
+    <div class="panel-card">
+      <div class="panel-header">{{ t('result.threat_origin') }}</div>
+      {% if data.country and data.country != 'Unknown' %}
+      <div id="country-map" style="height: 320px;"></div>
+      {% else %}
+      <p class="text-muted mb-0">{{ t('result.origin_unknown') }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
 {% if data.country and data.country != 'Unknown' %}
 <style>
 #country-map path[data-code="{{ data.country|lower }}"] {
