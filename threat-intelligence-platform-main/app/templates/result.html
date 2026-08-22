@@ -23,9 +23,12 @@
 <div class="panel-card">
 <div class="panel-header">{{ t('result.overview') }}</div>
 <dl class="detail-list">
-<dt>{{ t('common.target') }}</dt><dd class="font-monospace">{{ data.target }}</dd>
-<dt>{{ t('common.type') }}</dt><dd>{{ data.type|upper }}</dd>
-<dt>{{ t('result.analysis_date') }}</dt><dd>{{ data.analysis_date[:19]|replace('T', ' ') }} UTC</dd>
+<dt>{{ t('common.target') }}</dt>
+<dd class="font-monospace">{{ data.target }}</dd>
+<dt>{{ t('common.type') }}</dt>
+<dd>{{ data.type|upper }}</dd>
+<dt>{{ t('result.analysis_date') }}</dt>
+<dd>{{ data.analysis_date[:19]|replace('T', ' ') }} UTC</dd>
 </dl>
 </div>
 
@@ -61,10 +64,14 @@
 <span class="badge badge-muted me-1">{{ cat }}</span>
 {% endfor %}
 </dd>
-<dt>{{ t('result.country') }}</dt><dd>{{ data.country }}</dd>
-<dt>{{ t('result.isp') }}</dt><dd>{{ data.isp }}</dd>
-<dt>{{ t('result.asn') }}</dt><dd>{{ data.asn }}</dd>
-<dt>{{ t('result.hostname') }}</dt><dd class="font-monospace">{{ data.hostname }}</dd>
+<dt>{{ t('result.country') }}</dt>
+<dd>{{ data.country }}</dd>
+<dt>{{ t('result.isp') }}</dt>
+<dd>{{ data.isp }}</dd>
+<dt>{{ t('result.asn') }}</dt>
+<dd>{{ data.asn }}</dd>
+<dt>{{ t('result.hostname') }}</dt>
+<dd class="font-monospace">{{ data.hostname }}</dd>
 </dl>
 </div>
 </div>
@@ -75,9 +82,12 @@
 <div class="panel-card">
 <div class="panel-header">{{ t('result.whois') }}</div>
 <dl class="detail-list">
-<dt>{{ t('result.registrar') }}</dt><dd>{{ data.whois.registrar }}</dd>
-<dt>{{ t('result.registration_date') }}</dt><dd>{{ data.whois.registration_date }}</dd>
-<dt>{{ t('result.expiration_date') }}</dt><dd>{{ data.whois.expiration_date }}</dd>
+<dt>{{ t('result.registrar') }}</dt>
+<dd>{{ data.whois.registrar }}</dd>
+<dt>{{ t('result.registration_date') }}</dt>
+<dd>{{ data.whois.registration_date }}</dd>
+<dt>{{ t('result.expiration_date') }}</dt>
+<dd>{{ data.whois.expiration_date }}</dd>
 </dl>
 </div>
 </div>
@@ -86,11 +96,16 @@
 <div class="panel-card">
 <div class="panel-header">{{ t('result.reputation') }}</div>
 <dl class="detail-list">
-<dt>{{ t('result.virustotal') }}</dt><dd>{{ data.reputation.virustotal_status }}</dd>
-<dt>{{ t('result.blacklist') }}</dt><dd>{{ data.reputation.blacklist_status }}</dd>
-<dt>{{ t('result.malware') }}</dt><dd>{{ data.reputation.malware_detection }}</dd>
-<dt>{{ t('result.phishing') }}</dt><dd>{{ data.reputation.phishing_detection }}</dd>
-<dt>{{ t('result.spam') }}</dt><dd>{{ data.reputation.spam_detection }}</dd>
+<dt>{{ t('result.virustotal') }}</dt>
+<dd>{{ data.reputation.virustotal_status }}</dd>
+<dt>{{ t('result.blacklist') }}</dt>
+<dd>{{ data.reputation.blacklist_status }}</dd>
+<dt>{{ t('result.malware') }}</dt>
+<dd>{{ data.reputation.malware_detection }}</dd>
+<dt>{{ t('result.phishing') }}</dt>
+<dd>{{ data.reputation.phishing_detection }}</dd>
+<dt>{{ t('result.spam') }}</dt>
+<dd>{{ data.reputation.spam_detection }}</dd>
 </dl>
 </div>
 </div>
@@ -100,18 +115,19 @@
 <div class="col-12">
 <div class="panel-card">
 <div class="panel-header">{{ t('result.threat_origin') }}</div>
+
 {% if data.country and data.country != 'Unknown' %}
 <div class="map-wrap">
-  <div id="country-map" style="height: 320px;"></div>
-  <div class="map-origin-pill">
-    <span class="{{ country_flag_class(data.country) }}"></span>
-    <span>{{ country_name(data.country) }}</span>
-    <span class="map-origin-dot"></span>
-  </div>
+<div id="country-map" style="height:320px;"></div>
+<div class="map-origin-pill">
+<span class="map-origin-dot"></span>
+<span>{{ data.country }}</span>
+</div>
 </div>
 {% else %}
 <p class="text-muted mb-0">{{ t('result.origin_unknown') }}</p>
 {% endif %}
+
 </div>
 </div>
 </div>
@@ -120,6 +136,7 @@
 <a href="{{ url_for('analysis.analyze_page') }}" class="btn btn-outline-light">{{ t('result.new_analysis') }}</a>
 <a href="{{ url_for('history.index') }}" class="btn btn-link text-light">{{ t('result.view_history') }}</a>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -141,14 +158,16 @@ backgroundColor:'transparent',
 zoomButtons:false,
 zoomOnScroll:false,
 regionStyle:{
-initial:{fill:'transparent',stroke:'#3b5c7d',strokeWidth:0.75},
-hover:{fill:'rgba(56, 189, 248, 0.12)',stroke:'#38bdf8',strokeWidth:1,cursor:'pointer'}
+initial:{fill:'transparent',stroke:'#3b5c7d',strokeWidth:.75},
+hover:{fill:'rgba(56,189,248,.12)',stroke:'#38bdf8',strokeWidth:1,cursor:'pointer'}
 },
-series:{regions:[{
+series:{
+regions:[{
 values:{'{{ data.country }}':100},
 scale:['#ef3340','#ef3340'],
-normalizeFunction:'polynomial',
-}]}
+normalizeFunction:'polynomial'
+}]
+}
 });
 });
 </script>
