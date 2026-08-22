@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ app_name }}{% endblock %}
+
+{% block auth_content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+<header class="landing-nav">
+  <div class="landing-nav-brand">
+    <i class="bi bi-shield-lock-fill"></i>
+    <span>{{ app_name }}</span>
+  </div>
+  <div class="landing-nav-actions">
+    {% include "partials/language_switcher.html" %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-sm">{{ t('landing.cta_login') }}</a>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">{{ t('landing.cta_start') }}</a>
+  </div>
+</header>
+
+<section class="landing-hero">
+  <div class="landing-hero-grid"></div>
+  <div class="landing-hero-content">
+    <span class="landing-badge"><i class="bi bi-shield-check"></i> {{ t('landing.badge') }}</span>
+    <h1 class="landing-title">{{ t('landing.hero_title') }}</h1>
+    <p class="landing-subtitle">{{ t('landing.hero_subtitle') }}</p>
+    <div class="landing-cta-group">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">{{ t('landing.cta_start') }} <i class="bi bi-arrow-right"></i></a>
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">{{ t('landing.cta_login') }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="landing-features">
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-search"></i></div>
+    <h3>{{ t('landing.feature_analysis_title') }}</h3>
+    <p>{{ t('landing.feature_analysis_desc') }}</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-speedometer2"></i></div>
+    <h3>{{ t('landing.feature_dashboard_title') }}</h3>
+    <p>{{ t('landing.feature_dashboard_desc') }}</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+    <h3>{{ t('landing.feature_reports_title') }}</h3>
+    <p>{{ t('landing.feature_reports_desc') }}</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="bi bi-translate"></i></div>
+    <h3>{{ t('landing.feature_multilang_title') }}</h3>
+    <p>{{ t('landing.feature_multilang_desc') }}</p>
+  </div>
+</section>
+
+<footer class="landing-footer">
+  <span>&copy; {{ app_name }} — {{ t('landing.footer_rights') }}</span>
+</footer>
+{% endblock %}

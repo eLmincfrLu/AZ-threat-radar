@@ -20,7 +20,6 @@ def _stats():
     return total, safe, suspicious, malicious
 
 
-@dashboard_bp.route("/")
 @dashboard_bp.route("/dashboard")
 @login_required
 def index():

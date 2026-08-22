@@ -6,6 +6,11 @@ from app.services.auth_service import authenticate, register_user
 
 auth_bp = Blueprint("auth", __name__)
 
+@auth_bp.route("/")
+def landing():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard.index"))
+    return render_template("landing.html")
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
