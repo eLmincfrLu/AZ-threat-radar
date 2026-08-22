@@ -90,23 +90,17 @@
   </div>
 </div>
 
-<div class="row g-3 mt-1">
-  <div class="col-12">
-    <div class="panel-card">
-      <div class="panel-header">{{ t('result.threat_origin') }}</div>
-      {% if data.country and data.country != 'Unknown' %}
-      <div id="country-map" style="height: 320px;"></div>
-      {% else %}
-      <p class="text-muted mb-0">{{ t('result.origin_unknown') }}</p>
-      {% endif %}
-    </div>
-  </div>
-</div>
-
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
 {% if data.country and data.country != 'Unknown' %}
+<style>
+#country-map path[data-code="{{ data.country|lower }}"] {
+  filter: drop-shadow(0 0 6px #ef3340);
+  animation: mapPulse 2.4s ease-in-out infinite;
+}
+@keyframes mapPulse {
+  0%, 100% { filter: drop-shadow(0 0 4px #ef3340); }
+  50% { filter: drop-shadow(0 0 10px #ef3340); }
+}
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   new jsVectorMap({
@@ -114,9 +108,19 @@ document.addEventListener('DOMContentLoaded', function () {
     map: 'world',
     backgroundColor: 'transparent',
     zoomButtons: false,
+    zoomOnScroll: false,
     regionStyle: {
-      initial: { fill: '#1e293b', stroke: '#334155', strokeWidth: 0.5 },
-      hover: { fill: '#334155' }
+      initial: {
+        fill: 'transparent',
+        stroke: '#3b5c7d',
+        strokeWidth: 0.75
+      },
+      hover: {
+        fill: 'rgba(56, 189, 248, 0.12)',
+        stroke: '#38bdf8',
+        strokeWidth: 1,
+        cursor: 'pointer'
+      }
     },
     series: {
       regions: [{
@@ -130,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 {% endif %}
-{% endblock %}
 
 <div class="mt-3">
   <a href="{{ url_for('analysis.analyze_page') }}" class="btn btn-outline-light">{{ t('result.new_analysis') }}</a>
