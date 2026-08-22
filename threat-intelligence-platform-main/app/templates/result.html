@@ -28,7 +28,7 @@
     </div>
     <div class="panel-card mt-3">
       <div class="panel-header">{{ t('result.recommendations') }}</div>
-      <p class="rec-banner {{ risk_class }} mb-0">{{ data.recommendation }}</p>
+      <p class="rec-banner {{ risk_class }} mb-0">{{ t('result.recommendation.' + data.recommendation|lower) }}</p>
     </div>
   </div>
   <div class="col-lg-4">

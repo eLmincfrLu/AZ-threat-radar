@@ -111,6 +111,9 @@ def export_pdf(analysis_id):
     if analysis.user_id != current_user.id:
         abort(404)
     data = deserialize_payload(analysis.payload)
+    locale = resolve_locale()
+    rec_code = data.get("recommendation")
+    rec_text = translate(locale, f"result.recommendation.{rec_code.lower()}") if rec_code else "N/A"
     lines = [
         "Threat Intelligence Platform - Analysis Report",
         f"Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
@@ -120,7 +123,7 @@ def export_pdf(analysis_id):
         f"Risk Score: {analysis.risk_score}",
         f"Status: {analysis.status}",
         f"Country: {analysis.country or 'N/A'}",
-        f"Recommendation: {data.get('recommendation', 'N/A')}",
+        f"Recommendation: {rec_text}",
         "Categories: " + ", ".join(data.get("threat_categories") or []),
     ]
     pdf_bytes = _minimal_pdf("\n".join(lines))

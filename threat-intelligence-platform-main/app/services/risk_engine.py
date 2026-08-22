@@ -19,10 +19,10 @@ def score_to_status(score: int) -> str:
 
 def recommendation_for(score: int, categories: list[str]) -> str:
     if score >= 71:
-        return "Dərhal bloklayın"
+        return "BLOCK"
     if score >= 31 or categories:
-        return "Nəzarətdə saxlayın"
-    return "Təhlükə yoxdur"
+        return "MONITOR"
+    return "NONE"
 
 
 def compute_risk(base_score: int, category_weights: dict[str, int]) -> RiskResult:
