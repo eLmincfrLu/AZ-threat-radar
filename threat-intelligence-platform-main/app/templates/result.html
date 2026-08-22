@@ -121,14 +121,18 @@
 <div class="panel-card">
 <div class="panel-header">{{ t('result.threat_origin') }}</div>
 
-<div class="map-wrap">
-<div id="country-map" style="height:320px;"></div>
-{% if data.country and data.country != 'Unknown' %}
-<div class="map-origin-pill">
-<span class="map-origin-dot"></span>
-<span>{{ data.country }}</span>
-</div>
-{% endif %}
+<div class="map-wrap"
+     data-country="{{ data.country if data.country and data.country != 'Unknown' else '' }}"
+     data-is-threat="{{ '1' if data.status and data.status|lower != 'safe' else '0' }}">
+  <div id="country-map" style="height:320px;"></div>
+  <div class="map-origin-pill" style="display:none;">
+    <span class="map-origin-dot"></span>
+    <span class="map-origin-label"></span>
+  </div>
+  <div class="map-unknown-alert" style="display:none;">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ t('result.origin_alert') }}</span>
+  </div>
 </div>
 
 </div>
@@ -145,36 +149,54 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
-
-{% if data.country and data.country != 'Unknown' %}
-<style>
-#country-map path[data-code="{{ data.country|lower }}"]{filter:drop-shadow(0 0 6px #ef3340);animation:mapPulse 2.4s ease-in-out infinite}
-@keyframes mapPulse{0%,100%{filter:drop-shadow(0 0 4px #ef3340)}50%{filter:drop-shadow(0 0 10px #ef3340)}}
-</style>
-{% endif %}
-
 <script>
-document.addEventListener('DOMContentLoaded',function(){
-new jsVectorMap({
-selector:'#country-map',
-map:'world',
-backgroundColor:'transparent',
-zoomButtons:false,
-zoomOnScroll:false,
-regionStyle:{
-initial:{fill:'transparent',stroke:'#3b5c7d',strokeWidth:.75},
-hover:{fill:'rgba(56,189,248,.12)',stroke:'#38bdf8',strokeWidth:1,cursor:'pointer'}
-}
-{% if data.country and data.country != 'Unknown' %}
-,series:{
-regions:[{
-values:{'{{ data.country }}':100},
-scale:['#ef3340','#ef3340'],
-normalizeFunction:'polynomial'
-}]
-}
-{% endif %}
-});
+document.addEventListener('DOMContentLoaded', function () {
+  var wrap = document.querySelector('.map-wrap');
+  if (!wrap) { return; }
+
+  var countryCode = wrap.getAttribute('data-country');
+  var isThreat = wrap.getAttribute('data-is-threat') === '1';
+
+  var options = {
+    selector: '#country-map',
+    map: 'world',
+    backgroundColor: 'transparent',
+    zoomButtons: false,
+    zoomOnScroll: false,
+    regionStyle: {
+      initial: { fill: 'transparent', stroke: '#3b5c7d', strokeWidth: 0.75 },
+      hover: { fill: 'rgba(56,189,248,.12)', stroke: '#38bdf8', strokeWidth: 1, cursor: 'pointer' }
+    }
+  };
+
+  if (countryCode) {
+    var values = {};
+    values[countryCode] = 100;
+    options.series = {
+      regions: [{
+        values: values,
+        scale: ['#ef3340', '#ef3340'],
+        normalizeFunction: 'polynomial'
+      }]
+    };
+  }
+
+  new jsVectorMap(options);
+
+  if (countryCode) {
+    var pill = wrap.querySelector('.map-origin-pill');
+    pill.querySelector('.map-origin-label').textContent = countryCode;
+    pill.style.display = 'flex';
+
+    var glowStyle = document.createElement('style');
+    glowStyle.textContent =
+      '#country-map path[data-code="' + countryCode.toLowerCase() + '"]{' +
+      'filter:drop-shadow(0 0 6px #ef3340);animation:mapPulse 2.4s ease-in-out infinite}' +
+      '@keyframes mapPulse{0%,100%{filter:drop-shadow(0 0 4px #ef3340)}50%{filter:drop-shadow(0 0 10px #ef3340)}}';
+    document.head.appendChild(glowStyle);
+  } else if (isThreat) {
+    wrap.querySelector('.map-unknown-alert').style.display = 'flex';
+  }
 });
 </script>
 {% endblock %}
