@@ -101,7 +101,14 @@
 <div class="panel-card">
 <div class="panel-header">{{ t('result.threat_origin') }}</div>
 {% if data.country and data.country != 'Unknown' %}
-<div id="country-map" style="height: 320px;"></div>
+<div class="map-wrap">
+  <div id="country-map" style="height: 320px;"></div>
+  <div class="map-origin-pill">
+    <span class="{{ country_flag_class(data.country) }}"></span>
+    <span>{{ country_name(data.country) }}</span>
+    <span class="map-origin-dot"></span>
+  </div>
+</div>
 {% else %}
 <p class="text-muted mb-0">{{ t('result.origin_unknown') }}</p>
 {% endif %}
@@ -141,7 +148,6 @@ series:{regions:[{
 values:{'{{ data.country }}':100},
 scale:['#ef3340','#ef3340'],
 normalizeFunction:'polynomial',
-legend:{show:false}
 }]}
 });
 });
