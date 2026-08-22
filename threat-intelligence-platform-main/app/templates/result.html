@@ -103,6 +103,9 @@
   </div>
 </div>
 
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
 {% if data.country and data.country != 'Unknown' %}
 <style>
 #country-map path[data-code="{{ data.country|lower }}"] {
