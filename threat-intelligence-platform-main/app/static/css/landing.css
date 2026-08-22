@@ -144,6 +144,26 @@
   border-top: 1px solid var(--border);
 }
 
+.landing-nav-brand i {
+  animation: pulseIcon 2.4s ease-in-out infinite;
+}
+
+.btn-landing-primary {
+  animation: glowPulse 2.6s ease-in-out infinite;
+}
+
+.feature-icon {
+  animation: iconFloat 3s ease-in-out infinite;
+}
+.feature-card:nth-child(2) .feature-icon { animation-delay: 0.3s; }
+.feature-card:nth-child(3) .feature-icon { animation-delay: 0.6s; }
+.feature-card:nth-child(4) .feature-icon { animation-delay: 0.9s; }
+
+.landing-footer {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease 1s forwards;
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -158,6 +178,15 @@
 }
 @keyframes shine {
   to { background-position: -200% center; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35); }
+  50% { box-shadow: 0 8px 32px rgba(37, 99, 235, 0.65); }
+}
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 @media (max-width: 900px) { .landing-features { grid-template-columns: repeat(2, 1fr); } }
