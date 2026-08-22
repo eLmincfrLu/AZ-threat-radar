@@ -47,21 +47,17 @@
     clip-path: polygon(50.0% 0.0%, 58.0% 30.6%, 85.4% 14.6%, 69.4% 42.0%, 100.0% 50.0%, 69.4% 58.0%, 85.4% 85.4%, 58.0% 69.4%, 50.0% 100.0%, 42.0% 69.4%, 14.6% 85.4%, 30.6% 58.0%, 0.0% 50.0%, 30.6% 42.0%, 14.6% 14.6%, 42.0% 30.6%);
 }
   .lang-flag-en {
-    background: repeating-linear-gradient(
-      to bottom,
-      #b22234 0 7.69%,
-      #fff 7.69% 15.38%
-    );
-  }
-  .lang-flag-en::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 45%;
-    height: 53.8%;
-    background: #3c3b6e;
-  }
+    background-color: #012169;
+    background-image:
+      linear-gradient(to bottom, transparent 44%, #c8102e 44%, #c8102e 56%, transparent 56%),
+      linear-gradient(to right, transparent 44%, #c8102e 44%, #c8102e 56%, transparent 56%),
+      linear-gradient(to bottom, transparent 36%, #fff 36%, #fff 64%, transparent 64%),
+      linear-gradient(to right, transparent 36%, #fff 36%, #fff 64%, transparent 64%),
+      linear-gradient(45deg, transparent 46%, #c8102e 46%, #c8102e 54%, transparent 54%),
+      linear-gradient(-45deg, transparent 46%, #c8102e 46%, #c8102e 54%, transparent 54%),
+      linear-gradient(45deg, transparent 39%, #fff 39%, #fff 61%, transparent 61%),
+      linear-gradient(-45deg, transparent 39%, #fff 39%, #fff 61%, transparent 61%);
+}
   .lang-flag-ru {
     background: linear-gradient(to bottom, #fff 0 33.34%, #0039a6 33.34% 66.66%, #d52b1e 66.66% 100%);
   }
